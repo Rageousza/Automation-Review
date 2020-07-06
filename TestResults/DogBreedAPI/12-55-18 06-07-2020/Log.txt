@@ -1,3 +1,0 @@
-06-07-2020 12:55:21  - [START] - Test Started - AllBreedAPI
-06-07-2020 12:55:22  - 	 	[SUCCESS] - OK
-06-07-2020 12:55:22  - 	 	[SUCCESS] - application/json

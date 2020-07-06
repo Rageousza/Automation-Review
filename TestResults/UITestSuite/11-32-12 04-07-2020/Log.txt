@@ -1,3 +1,0 @@
-04-07-2020 23:32:15  - [START] - Test Started - UITest
-04-07-2020 23:32:25  - 	 	[SUCCESS] - Added Details
-04-07-2020 23:32:28  - 	 	[SUCCESS] - Validate User FName23 has been added to the list

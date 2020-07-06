@@ -1,1 +1,0 @@
-06-07-2020 11:42:56  - [START] - Test Started - RandomGoldenImageAPI
