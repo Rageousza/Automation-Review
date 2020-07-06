@@ -1,0 +1,3 @@
+04-07-2020 23:33:42  - [START] - Test Started - UITest
+04-07-2020 23:33:51  - 	 	[SUCCESS] - Added Details
+04-07-2020 23:33:55  - 	 	[SUCCESS] - Validate User FName1 has been added to the list

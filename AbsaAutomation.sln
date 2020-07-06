@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30204.135
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbsaAutomation", "AbsaAutomation.csproj", "{A1DA03C3-E444-4A68-812C-66D2D2F28175}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A1DA03C3-E444-4A68-812C-66D2D2F28175}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1DA03C3-E444-4A68-812C-66D2D2F28175}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1DA03C3-E444-4A68-812C-66D2D2F28175}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1DA03C3-E444-4A68-812C-66D2D2F28175}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E3DFBE9D-AE34-4117-AAF1-FDFE99258414}
+	EndGlobalSection
+EndGlobal
