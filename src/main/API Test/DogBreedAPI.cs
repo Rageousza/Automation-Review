@@ -23,7 +23,6 @@ namespace AbsaAutomation.src.main.API_Test
         {
             Reporting.starttime = DateTime.Now;
             Reporting.TestName = TestContext.TestName;
-            //Reporting.ReportDescription = TestContext.Properties.(x => x.Key == "Description").First().Value().ToString();
 
             Reporting.CreateTest();
             Reporting.WriteToLogFile("[START] - Test Started - " + Reporting.TestName);
@@ -41,7 +40,7 @@ namespace AbsaAutomation.src.main.API_Test
             Console.WriteLine(response.Content);
             var statusDesc = response.StatusDescription;
             Assert.AreEqual("OK", statusDesc.ToString());
-            Reporting.StepPassed("Status Code: " + response.StatusDescription);
+            Reporting.StepPassed("Status Description: " + response.StatusDescription);
             Reporting.StepPassed("API Content - " + response.Content);
 
         }
@@ -57,6 +56,8 @@ namespace AbsaAutomation.src.main.API_Test
             Console.WriteLine(response.Content);
             var breed = response.Content.Contains("retriever");
             Assert.IsTrue(breed);
+            Reporting.StepPassed("Status Description: " + response.StatusDescription);
+            Reporting.StepPassed("API Content - " + response.Content);
 
         }
 
@@ -69,8 +70,10 @@ namespace AbsaAutomation.src.main.API_Test
             request.AddHeader("Cookie", "__cfduid=de02f8e5eac0368cd2f92235381eb69621593899937");
             IRestResponse response = client.Execute(request);
             Console.WriteLine(response.Content);
-            var statusCode = response.StatusCode;
-            Assert.AreEqual("OK", statusCode.ToString());
+            var StatusDescription = response.StatusDescription;
+            Assert.AreEqual("OK", StatusDescription.ToString());
+            Reporting.StepPassed("Status Description: " + response.StatusDescription);
+            Reporting.StepPassed("API Content - " + response.Content);
 
         }
 
@@ -83,8 +86,10 @@ namespace AbsaAutomation.src.main.API_Test
             request.AddHeader("Cookie", "__cfduid=de02f8e5eac0368cd2f92235381eb69621593899937");
             IRestResponse response = client.Execute(request);
             Console.WriteLine(response.Content);
-            var statusCode = response.StatusCode;
-            Assert.AreEqual("OK", statusCode.ToString());
+            var StatusDescription = response.StatusDescription;
+            Assert.AreEqual("OK", StatusDescription.ToString());
+            Reporting.StepPassed("Status Description: " + response.StatusDescription);
+            Reporting.StepPassed("API Content - " + response.Content);
         }
     }
 }

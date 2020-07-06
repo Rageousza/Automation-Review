@@ -1,0 +1,6 @@
+06-07-2020 16:13:33  - [START] - Test Started - UITest2
+06-07-2020 16:13:44  - 	 	[SUCCESS] - Added Details
+06-07-2020 16:13:48  - 	 	[SUCCESS] - Validate User FName20 has been added to the list
+06-07-2020 16:13:48  - [START] - Test Started - UITest
+06-07-2020 16:13:59  - 	 	[SUCCESS] - Added Details
+06-07-2020 16:14:02  - 	 	[SUCCESS] - Validate User FName19 has been added to the list
