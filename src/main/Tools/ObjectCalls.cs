@@ -1,53 +1,49 @@
 ﻿using System;
 using System.Text;
 using System.Threading;
+using AbsaAutomation.src.main.Core;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
+using WebDriverManager;
+using WebDriverManager.DriverConfigs.Impl;
+using AbsaAutomation.src.main.Tools;
+
 
 namespace AbsaAutomation.src.main.Tools
 {
-    public class ObjectCalls
+    public class ObjectCalls : Base
     {
-        static string url = "http://www.way2automation.com/angularjs-protractor/webtables/";
-        public enum BrowserType { CHROME }
-        public static IWebDriver Driver { get; set; }
-        public BrowserType CurrentBrowser { get; set; }
+        public IWebDriver driver;
+
         private static int ScreenshotCounter;
 
-        public ObjectCalls()
+        public ObjectCalls(string url)
         {
-            Assert.IsNotNull(LDriver());
+            new DriverManager().SetUpDriver(new ChromeConfig());
+            driver = new ChromeDriver();
+
+            driver.Navigate().GoToUrl(url);
+            driver.Manage().Window.Maximize();
         }
 
-        public IWebDriver LDriver()
-        {
+        public IWebDriver GetDriver => driver;
 
-            Driver = new ChromeDriver(@"C:\AbsaAutomation");
-            Driver.Manage().Window.Maximize();
-            return Driver;
-        }
-
-        public static bool DriverClose()
+        public bool DriverClose()
         {
-            Driver.Close();
-            Driver.Quit();
+            driver.Close();
+            driver.Quit();
 
             return true;
         }
 
-        public static void Navigate()
-        {
-            
-            Driver.Navigate().GoToUrl(url);
-        }
 
-        public static bool WaitForElement(By selector)
+        public bool WaitForElement(By selector)
         {
             try 
             { 
-                WebDriverWait wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(1));
+                WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(1));
                 wait.Until(element => element.FindElement(selector));
                 return true;
             }
@@ -58,11 +54,11 @@ namespace AbsaAutomation.src.main.Tools
             }
         }
 
-        public static bool ClickElement(By Selector)
+        public bool ClickElement(By Selector)
         {
             try
             {
-                IWebElement element = Driver.FindElement(Selector);
+                IWebElement element = driver.FindElement(Selector);
                 element.Click();
                 return true;
             }
@@ -73,17 +69,17 @@ namespace AbsaAutomation.src.main.Tools
             }
         }
 
-        public static bool Pause()
+        public bool Pause()
         {
             Thread.Sleep(3000);
             return true;
         }
 
-        public static bool EnterText(By Selector, string text)
+        public bool EnterText(By Selector, string text)
         {
             try
             {
-                IWebElement element = Driver.FindElement(Selector);
+                IWebElement element = driver.FindElement(Selector);
                 element.Clear();
                 element.SendKeys(text);
                 return true;
@@ -95,9 +91,9 @@ namespace AbsaAutomation.src.main.Tools
             }
         }
 
-        public static string RetrieveText(By Selector)
+        public string RetrieveText(By Selector)
         {
-            IWebElement element = Driver.FindElement(Selector);
+            IWebElement element = driver.FindElement(Selector);
             return element.Text;
         }
 
@@ -112,7 +108,7 @@ namespace AbsaAutomation.src.main.Tools
             relativeBuilder.Append(ScreenshotCounter + "_" + ((status) ? @"Passed" : @"Failed"));
             relativeBuilder.Append(".png");
 
-            ((ITakesScreenshot)Driver).GetScreenshot().SaveAsFile("" + builder + relativeBuilder);
+            ((ITakesScreenshot)driver).GetScreenshot().SaveAsFile("" + builder + relativeBuilder);
             return "./" + relativeBuilder;
         }
     }

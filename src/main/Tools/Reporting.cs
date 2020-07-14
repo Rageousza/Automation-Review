@@ -1,24 +1,15 @@
 ﻿using System;
-
 using AventStack.ExtentReports.Reporter;
 using AventStack.ExtentReports;
+using AbsaAutomation.src.main.Core;
 
 
 namespace AbsaAutomation.src.main.Tools
 {
-    public class Reporting
+    public class Reporting : Base
     {
-        public static ObjectCalls DriverInstance;
-        public static string ReportName { get; set; }
-        public static string ReportDescription { get; set; }
-        public static string TestName { get; set; }
-        public static string _reportDir;
-        public static string ReportDirectory { get => _reportDir; set => _reportDir = value; }
-        public static DateTime starttime { get; set; }
-        public static DateTime endTime { get; set; }
-        public static string LogFile { get => _reportDir + @"\Log.txt"; }
-        private static AventStack.ExtentReports.ExtentReports report;
-        private static ExtentTest curTest;
+        public static AventStack.ExtentReports.ExtentReports report;
+        public static ExtentTest curTest;
 
         private static bool CheckTest()
         {
@@ -162,9 +153,9 @@ namespace AbsaAutomation.src.main.Tools
         public static string TakeScreenshot(bool status)
         {
             string screenshotpath = null;
-            if (ObjectCalls.Driver != null)
+            if (ObjectCallsInstance.driver != null)
             {
-                screenshotpath = (screenshotpath == null) ? DriverInstance.TakeScreenshot(status) : screenshotpath;
+                screenshotpath = (screenshotpath == null) ? ObjectCallsInstance.TakeScreenshot(status) : screenshotpath;
             }
 
             return screenshotpath;

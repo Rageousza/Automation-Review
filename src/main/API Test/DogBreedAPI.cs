@@ -2,11 +2,13 @@
 using RestSharp;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using AbsaAutomation.src.main.Tools;
+using AbsaAutomation.src.main.Core;
+using System.Linq;
 
 namespace AbsaAutomation.src.main.API_Test
 {
     [TestClass]
-    public class DogBreedAPI
+    public class DogBreedAPI : Base
     {
         public TestContext TestContext { get; set; }
 
@@ -23,6 +25,7 @@ namespace AbsaAutomation.src.main.API_Test
         {
             Reporting.starttime = DateTime.Now;
             Reporting.TestName = TestContext.TestName;
+            //ReportDescription = TestContext.Properties.Where(x => x.Key == "Description").First().Value.ToString();
 
             Reporting.CreateTest();
             Reporting.WriteToLogFile("[START] - Test Started - " + Reporting.TestName);
