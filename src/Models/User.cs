@@ -13,6 +13,6 @@ namespace AbsaAutomation.src.Models
         public string Customer { get; set; }
         public string Role { get; set; }
         public string Email { get; set; }
-        public long Cell { get; set; }
+        public string Cell { get; set; }
     }
 }

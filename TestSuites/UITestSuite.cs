@@ -5,39 +5,40 @@ using AbsaAutomation.src.main.Tools;
 using System.Linq;
 using AbsaAutomation.src.main.Core;
 using AbsaAutomation.src.tests;
-using System.Reflection;
+using AbsaAutomation.src.main.Pages;
 
 [assembly: Parallelize(Workers = 0, Scope = ExecutionScope.MethodLevel)]
 
 namespace AbsaAutomation.src.main.TestSuites
 {
     [TestClass]
-    public class UITestSuite
+    public class UITestSuite 
     {
         public TestContext TestContext { get; set; }
+        public ProtractorApplication protractorApplication { get; set; }
 
         [TestMethod]
         public void CSVTest()
         {
-            var currentTest = Base.Report.CreateTest(MethodBase.GetCurrentMethod().ToString());
-            SeleniumMethods SeleniumInst = new SeleniumMethods("http://www.way2automation.com/angularjs-protractor/webtables/");
+            var currentTest = Base.Report.CreateTest(TestContext.TestName);
+            IWebDriver driver =  SeleniumController.CreateDriver("http://www.way2automation.com/angularjs-protractor/webtables/");
+            protractorApplication = new ProtractorApplication(driver, currentTest);
 
-            UITesting uiTesting = new UITesting(SeleniumInst, currentTest);
+            protractorApplication.userPage.CSVTest("UserCSV.csv");
 
-            uiTesting.CSVTest("UserCSV.csv"); // Over here
-
-            SeleniumInst.GetDriver.Close();
+            SeleniumController.DriverClose(driver);
         }
 
         [TestMethod]
         public void JSONTest()
         {
-            var currentTest = Base.Report.CreateTest(MethodBase.GetCurrentMethod().ToString());
-            SeleniumMethods SeleniumInst = new SeleniumMethods("http://www.way2automation.com/angularjs-protractor/webtables/");
+            var currentTest = Base.Report.CreateTest(TestContext.TestName);
+            IWebDriver driver = SeleniumController.CreateDriver("http://www.way2automation.com/angularjs-protractor/webtables/");
+            protractorApplication = new ProtractorApplication(driver, currentTest);
+
+            protractorApplication.userPage.JSONTest("UserData.json");
             
-            UITesting uiTesting = new UITesting(SeleniumInst, currentTest);
-            uiTesting.JSONTest("UserData.json");
-            SeleniumInst.GetDriver.Close();
+            SeleniumController.DriverClose(driver);
         }
     }
 }

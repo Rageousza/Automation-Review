@@ -15,41 +15,44 @@ using AventStack.ExtentReports;
 
 namespace AbsaAutomation.src.main.Tools
 {
-    public class SeleniumMethods
+    public abstract class SeleniumController : ReportHandler
     {
         private Random random = new Random();
-        private IWebDriver _driver;
 
-
-        public SeleniumMethods(string URL)
+        public SeleniumController(IWebDriver driver)
         {
-            _driver = CreateDriver(URL);
+            _driver = driver;
         }
 
-        public IWebDriver CreateDriver(string URL)
+        public static IWebDriver CreateDriver(string URL)
         {
             new DriverManager().SetUpDriver(new ChromeConfig());
-            _driver = new ChromeDriver();
-            _driver.Navigate().GoToUrl(URL);
-            _driver.Manage().Window.Maximize();
-            return _driver;
+            var driver = new ChromeDriver();
+            driver.Navigate().GoToUrl(URL);
+            driver.Manage().Window.Maximize();
+            return driver;
+        }
+
+        public void Navigate(string url)
+        {
+            _driver.Url = url;
         }
 
         public IWebDriver GetDriver => _driver;
 
-        public bool DriverClose()
+        public static bool DriverClose(IWebDriver driver)
         {
-            if (_driver != null)
+            if (driver != null)
             {
-                _driver.Close();
-                _driver.Quit();
+                driver.Close();
+                driver.Quit();
             }
 
             return true;
         }
 
 
-        public bool WaitForElement(By selector, int sec, ExtentTest CurrentTest)
+        public bool WaitForElement(By selector, int sec = 5)
         {
             try 
             { 
@@ -61,14 +64,14 @@ namespace AbsaAutomation.src.main.Tools
             }
             catch(Exception e)
             {
-                Base.Report.TestFailed("Failed to locate element - " + selector, _driver, CurrentTest);
+                TestFailed("Failed to locate element - " + selector);
                 throw e;
                 //difference between throw new and just throw
                 
             }
         }
 
-        public bool ClickElement(By selector, ExtentTest CurrentTest)
+        public bool ClickElement(By selector)
         {
             try
             {
@@ -77,7 +80,7 @@ namespace AbsaAutomation.src.main.Tools
             }
             catch(Exception e)
             {
-                Base.Report.TestFailed("Failed to interact with element - " + selector, _driver, CurrentTest);
+                TestFailed("Failed to interact with element - " + selector);
                 throw e;
             }
         }
@@ -88,12 +91,14 @@ namespace AbsaAutomation.src.main.Tools
             return true;
         }
 
-        public bool EnterText(By selector, string text, ExtentTest CurrentTest, bool clear = false )
+        public bool EnterText(By selector, string text, bool clear = false)
         {
             try
             {
                 if (clear)
+                {
                     _driver.FindElement(selector).Clear();
+                }
 
                 _driver.FindElement(LocateElement(selector)).SendKeys(text); ;
       
@@ -101,7 +106,7 @@ namespace AbsaAutomation.src.main.Tools
             }
             catch(Exception e)
             {
-                Base.Report.TestFailed("Failed to enter text - " + selector, _driver, CurrentTest);
+                TestFailed("Failed to enter text - " + selector);
                 throw e;
             }
         }

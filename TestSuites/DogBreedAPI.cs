@@ -16,41 +16,43 @@ namespace AbsaAutomation.src.main.API_Test
     [TestClass]
     public class DogBreedAPI
     {
+
+        public TestContext TestContext { get; set; }
         public static string BaseUrl = "https://dog.ceo/api/";
   
         [TestMethod]
-        public void AllBreedAPI()
+        public void All_Breed_API()
         {
             APIController APIControllerInst = new APIController(BaseUrl);
-            var CurrentTest = Base.Report.CreateTest(MethodBase.GetCurrentMethod().ToString());
+            var CurrentTest = Base.Report.CreateTest(TestContext.TestName);
             var response = APIControllerInst.GetRequest("breeds/list/all", CurrentTest);
             response.ValidateResponseCode(HttpStatusCode.OK, CurrentTest);
         }
 
         [TestMethod]
-        public void RetrieverBreedAPI()
+        public void Retriever_Breed_API()
         {
             APIController APIControllerInst = new APIController(BaseUrl);
-            var CurrentTest = Base.Report.CreateTest(MethodBase.GetCurrentMethod().ToString());
+            var CurrentTest = Base.Report.CreateTest(TestContext.TestName);
             var response = APIControllerInst.GetRequest("breeds/list/all", CurrentTest); 
             response.ValidateResponseCode(HttpStatusCode.OK, CurrentTest);
             response.ResponseContains("retriever", CurrentTest);
         }
 
         [TestMethod]
-        public void SubBreedAPI()
+        public void Sub_Breed_API()
         {
             APIController APIControllerInst = new APIController(BaseUrl);
-            var CurrentTest = Base.Report.CreateTest(MethodBase.GetCurrentMethod().ToString());
+            var CurrentTest = Base.Report.CreateTest(TestContext.TestName);
             var response = APIControllerInst.GetRequest("breed/retriever/list", CurrentTest);
             response.ValidateResponseCode(HttpStatusCode.OK, CurrentTest);
         }
 
         [TestMethod]
-        public void RandomGoldenImageAPI()
+        public void Random_Golden_Image_API()
         {
             APIController APIControllerInst = new APIController(BaseUrl);
-            var CurrentTest = Base.Report.CreateTest(MethodBase.GetCurrentMethod().ToString());
+            var CurrentTest = Base.Report.CreateTest(TestContext.TestName);
             var response = APIControllerInst.GetRequest("breed/retriever/golden/images/random", CurrentTest);
             response.ValidateResponseCode(HttpStatusCode.OK, CurrentTest);
         }

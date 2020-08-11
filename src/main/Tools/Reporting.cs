@@ -3,15 +3,14 @@ using AventStack.ExtentReports.Reporter;
 using AventStack.ExtentReports;
 using AbsaAutomation.src.main.Core;
 using AventStack.ExtentReports.MarkupUtils;
-using AventStack.ExtentReports.Model;
 using OpenQA.Selenium;
 using System.Text;
+using System.IO;
 
 namespace AbsaAutomation.src.main.Tools
 {
     public class Reporting
     {
-        private IWebDriver _driver;
         public Reporting()
         {
             Setup();
@@ -82,17 +81,21 @@ namespace AbsaAutomation.src.main.Tools
             }
         }
 
-        public void TestFailed(string message, IWebDriver driver, ExtentTest curTest)
+        public void TestFailed(string message, IWebDriver driver, ExtentTest curTest, Screenshot screenshot = null)
         {
+            ScreenshotCounter++;
+            string file = _reportDir + @"Screenshots\";
+            Directory.CreateDirectory(file);
+            screenshot.SaveAsFile(file + ScreenshotCounter + ".png");
             try
             {
-                curTest.Fail(message + "<br>", MediaEntityBuilder.CreateScreenCaptureFromPath(STakeScreenshot(false)).Build());
+                curTest.Fail(message + "<br>", MediaEntityBuilder.CreateScreenCaptureFromPath(file).Build());
                 _report.Flush();
                
             }
-            catch 
+            catch (Exception e)
             {
-  
+                throw e;
             }
         }
         public void TestFailed(string message, ExtentTest curTest)
@@ -108,36 +111,39 @@ namespace AbsaAutomation.src.main.Tools
             }
         }
 
-        public string StepPassedWithScreenshot(string message, IWebDriver driver, ExtentTest curTest)
+        public void StepPassedWithScreenshot(string message, ExtentTest curTest, Screenshot screenshot = null)
         {
+            ScreenshotCounter++;
+            string file = _reportDir + @"Screenshots\";
+            Directory.CreateDirectory(file);
+            screenshot.SaveAsFile(file + ScreenshotCounter + ".png");
             try
             {
                 curTest.Pass(message + "<br>",
-                     MediaEntityBuilder.CreateScreenCaptureFromPath(
-                STakeScreenshot(true)).Build());
+                     MediaEntityBuilder.CreateScreenCaptureFromPath(file).Build());
                 _report.Flush();
-                return null;
+   
             }
             catch (Exception exc)
             {
                //Prints the message without the screenshot on the report
-                Warning(message, curTest);
+                Warning("Failed to capture Screenshot", curTest);
 
                 //Returns the error message
                 throw exc;
             }
         }
 
-        public string TakeScreenshot(bool status)
-        {
-            string screenshotpath = null;
-            if (_driver != null)
-            {
-                screenshotpath = (screenshotpath == null) ? STakeScreenshot(status) : screenshotpath;
-            }
+        //public string TakeScreenshot(bool status)
+        //{
+        //    string screenshotpath = null;
+        //    if (_driver != null)
+        //    {
+        //        screenshotpath = (screenshotpath == null) ? STakeScreenshot(status) : screenshotpath;
+        //    }
 
-            return screenshotpath;
-        }
+        //    return screenshotpath;
+        //}
 
         public void StepInfoAPI(string message, CodeLanguage codeLanguageFormat, ExtentTest curTest)
         {
@@ -157,20 +163,20 @@ namespace AbsaAutomation.src.main.Tools
             }
         }
 
-        public string STakeScreenshot(bool status)
-        {
-            ScreenshotCounter++;
-            StringBuilder builder = new StringBuilder();
-            StringBuilder relativeBuilder = new StringBuilder();
-            builder.Append(ReportDirectory);
-            relativeBuilder.Append("Screenshots\\");
-            System.IO.Directory.CreateDirectory("" + builder + relativeBuilder);
-            relativeBuilder.Append(ScreenshotCounter + "_" + ((status) ? @"Passed" : @"Failed"));
-            relativeBuilder.Append(".png");
+        //public string STakeScreenshot(bool status)
+        //{
+        //    ScreenshotCounter++;
+        //    StringBuilder builder = new StringBuilder();
+        //    StringBuilder relativeBuilder = new StringBuilder();
+        //    builder.Append(ReportDirectory);
+        //    relativeBuilder.Append("Screenshots\\");
+        //    System.IO.Directory.CreateDirectory("" + builder + relativeBuilder);
+        //    relativeBuilder.Append(ScreenshotCounter + "_" + ((status) ? @"Passed" : @"Failed"));
+        //    relativeBuilder.Append(".png");
 
-            ((ITakesScreenshot)_driver).GetScreenshot().SaveAsFile("" + builder + relativeBuilder);
-            return "./" + relativeBuilder;
-        }
+        //    ((ITakesScreenshot)_driver).GetScreenshot().SaveAsFile("" + builder + relativeBuilder);
+        //    return "./" + relativeBuilder;
+        //}
 
 
     }

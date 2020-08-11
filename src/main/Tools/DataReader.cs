@@ -15,7 +15,7 @@ namespace AbsaAutomation.src.main.Tools
         {
             DataTable table = new DataTable();
             {
-                var reader = new StreamReader(File.OpenRead(AppDomain.CurrentDomain.BaseDirectory + @"..\..\..\src\Data\" + CSVFile));
+                var reader = new StreamReader(File.OpenRead(@"src\Data\" + CSVFile));
                 int counter = 0;
                 while (!reader.EndOfStream)
                 {
@@ -45,13 +45,13 @@ namespace AbsaAutomation.src.main.Tools
 
         public string RetrieveDataFromDataTable(DataTable table, string columnName, int rowNumber) => (table.Rows[rowNumber])[columnName].ToString();
 
-        public List<User> LoadJson(string JsonFile)
+        public static T LoadJson<T>(string JsonFile)
         {
-            List<User> items;
-            using (StreamReader r = new StreamReader(AppDomain.CurrentDomain.BaseDirectory + @"..\..\..\src\Data\" + JsonFile))
+            T items;
+            using (StreamReader r = new StreamReader(@"src\Data\" + JsonFile))
             {
                 string json = r.ReadToEnd();
-                items = JsonConvert.DeserializeObject<List<User>>(json);
+                items = JsonConvert.DeserializeObject<T>(json);
             }
             return items;
         }

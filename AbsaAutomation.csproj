@@ -17,11 +17,17 @@
     <PackageReference Include="Selenium.WebDriver" Version="3.141.0" />
     <PackageReference Include="System.Linq" Version="4.3.0" />
     <PackageReference Include="WebDriverManager" Version="2.9.2" />
-	  
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="src\Data\" />
-  </ItemGroup>
+	
+	<ItemGroup>
+		<None Update="src\Data\UserData.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+	<ItemGroup>
+		<None Update="src\Data\UserCSV.csv">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
 
 </Project>

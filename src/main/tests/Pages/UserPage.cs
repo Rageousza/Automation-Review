@@ -19,17 +19,11 @@ using OpenQA.Selenium;
 
 namespace AbsaAutomation.src.tests
 {
-    public class UITesting 
+    public class UserPage : SeleniumController
     {
-        private SeleniumMethods _SeleniumMethodInst;
-        private ExtentTest _CurrentTest;
-
-        private IWebDriver driver;
-        public UITesting(SeleniumMethods SeleniumMethodInst, ExtentTest CurrentTest)
+        public UserPage(IWebDriver driver, ExtentTest CurrentTest) : base(driver)
         {
-            _SeleniumMethodInst = SeleniumMethodInst;
-            _CurrentTest = CurrentTest;
-            driver = _SeleniumMethodInst.GetDriver;
+            _curTest = CurrentTest;            
         }
 
         private By FirstName() { return By.XPath("//span[contains(text(), 'First Name')]"); }
@@ -48,48 +42,47 @@ namespace AbsaAutomation.src.tests
         private By SaveUser() { return By.XPath("//button[@ng-click= 'save(user)']"); }
         private By CompanyRadioButton(string Company) { return By.XPath("//label[text()='"+ Company +"']");  }
 
-
         public void CSVTest(string CSVFileName)
         {
-            _SeleniumMethodInst.WaitForElement(FirstName(), 5, _CurrentTest);
+            WaitForElement(FirstName());
 
             for (int i = 0; i < 2; i++)
             {
-                int k = _SeleniumMethodInst.GenerateRandomNumber(100);
+                int k = GenerateRandomNumber(100);
                 DataTable CSVRead = new DataReader().readCSVfile(CSVFileName);
 
-                _SeleniumMethodInst.WaitForElement(FirstName(), 5, _CurrentTest);
-                _SeleniumMethodInst.ClickElement(AddUser(), _CurrentTest);
+                WaitForElement(FirstName());
+                ClickElement(AddUser());
 
                 string fname = new DataReader().RetrieveDataFromDataTable(CSVRead, "firstname", i);
                 string lname = new DataReader().RetrieveDataFromDataTable(CSVRead, "lastname", i);
 
-                _SeleniumMethodInst.EnterText(AddFNameField(), fname, _CurrentTest, true);
-                _SeleniumMethodInst.EnterText(AddLNameField(), lname, _CurrentTest, true);
-                _SeleniumMethodInst.EnterText(AddUNameField(), new DataReader().RetrieveDataFromDataTable(CSVRead, "username", i), _CurrentTest, true);
-                _SeleniumMethodInst.EnterText(AddPasswordField(), new DataReader().RetrieveDataFromDataTable(CSVRead, "password", i), _CurrentTest, true);
-                _SeleniumMethodInst.ClickElement(RB_CompanyAAA(), _CurrentTest);
-                _SeleniumMethodInst.ClickElement(AdminRole(), _CurrentTest);
-                _SeleniumMethodInst.EnterText(AddEmailField(), new DataReader().RetrieveDataFromDataTable(CSVRead, "email", i), _CurrentTest, true);
-                _SeleniumMethodInst.EnterText(AddCellPhoneField(), new DataReader().RetrieveDataFromDataTable(CSVRead, "cell", i), _CurrentTest, true);
+                EnterText(AddFNameField(), fname, true);
+                EnterText(AddLNameField(), lname, true);
+                EnterText(AddUNameField(), new DataReader().RetrieveDataFromDataTable(CSVRead, "username", i), true);
+                EnterText(AddPasswordField(), new DataReader().RetrieveDataFromDataTable(CSVRead, "password", i), true);
+                ClickElement(RB_CompanyAAA());
+                ClickElement(AdminRole());
+                EnterText(AddEmailField(), new DataReader().RetrieveDataFromDataTable(CSVRead, "email", i), true);
+                EnterText(AddCellPhoneField(), new DataReader().RetrieveDataFromDataTable(CSVRead, "cell", i), true);
 
-                Base.Report.StepPassedWithScreenshot("Added Details", driver, _CurrentTest);
-                _SeleniumMethodInst.ClickElement(SaveUser(), _CurrentTest);
-                _SeleniumMethodInst.Pause();
+                StepPassScreenshot("Added Details");
+                ClickElement(SaveUser());
+                Pause();
 
-                _SeleniumMethodInst.WaitForElement(ValidateAddedUser(fname), 5, _CurrentTest);
-                Base.Report.StepPassedWithScreenshot("Validate User " + fname + " has been added to the list", driver, _CurrentTest);
+                WaitForElement(ValidateAddedUser(fname), 5);
+                StepPassScreenshot("Validate User " + fname + " has been added to the list");
             }
         }
 
         public void JSONTest(string File)
         {
-            _SeleniumMethodInst.WaitForElement(FirstName(), 5, _CurrentTest);
+            WaitForElement(FirstName());
 
             for(int i = 0; i < 2; i++)
             {
-                int k = _SeleniumMethodInst.GenerateRandomNumber(100);
-                List<User> user = new DataReader().LoadJson(File);
+                int k = GenerateRandomNumber(100);
+                List<User> user = DataReader.LoadJson<List<User>>(File);
                 string firstname = user[i].Firstname;
                 string lastname = user[i].Lastname;
                 string username = user[i].Username;
@@ -99,21 +92,21 @@ namespace AbsaAutomation.src.tests
                 string email = user[i].Email;
                 string cell = user[i].Cell.ToString();
 
-                _SeleniumMethodInst.WaitForElement(FirstName(), 5, _CurrentTest);
-                _SeleniumMethodInst.ClickElement(AddUser(), _CurrentTest);
-                _SeleniumMethodInst.EnterText(AddFNameField(), firstname + k, _CurrentTest , true);
-                _SeleniumMethodInst.EnterText(AddLNameField(), lastname + k, _CurrentTest, true);
-                _SeleniumMethodInst.EnterText(AddUNameField(), username + k, _CurrentTest,  true);
-                _SeleniumMethodInst.EnterText(AddPasswordField(), password + k, _CurrentTest, true);
-                _SeleniumMethodInst.ClickElement(CompanyRadioButton(customer), _CurrentTest);
-                _SeleniumMethodInst.ClickElement(CustomerRole(), _CurrentTest);
-                _SeleniumMethodInst.EnterText(AddEmailField(), email, _CurrentTest, true);
-                _SeleniumMethodInst.EnterText(AddCellPhoneField(), cell, _CurrentTest, true);
-                Base.Report.StepPassedWithScreenshot("Added Details", driver, _CurrentTest);
-                _SeleniumMethodInst.ClickElement(SaveUser(), _CurrentTest);
-                _SeleniumMethodInst.Pause();
-                _SeleniumMethodInst.WaitForElement(ValidateAddedUser(firstname), 5, _CurrentTest);
-                Base.Report.StepPassedWithScreenshot("Validate User " + firstname + " has been added to the list", driver, _CurrentTest);
+                WaitForElement(FirstName());
+                ClickElement(AddUser());
+                EnterText(AddFNameField(), firstname + k, true);
+                EnterText(AddLNameField(), lastname + k, true);
+                EnterText(AddUNameField(), username + k , true);
+                EnterText(AddPasswordField(), password + k, true);
+                ClickElement(CompanyRadioButton(customer));
+                ClickElement(CustomerRole());
+                EnterText(AddEmailField(), email, true);
+                EnterText(AddCellPhoneField(), cell, true);
+                StepPassScreenshot("Added Details");
+                ClickElement(SaveUser());
+                Pause();
+                WaitForElement(ValidateAddedUser(firstname), 5);
+                StepPassScreenshot("Validate User " + firstname + " has been added to the list");
             }
         }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
     }
