@@ -1,44 +1,35 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using AbsaAutomation.src.main.Tools;
 using System.Linq;
 using AbsaAutomation.src.main.Core;
 using AbsaAutomation.src.tests;
 using AbsaAutomation.src.main.Pages;
-
-[assembly: Parallelize(Workers = 0, Scope = ExecutionScope.MethodLevel)]
+using NUnit.Framework;
 
 namespace AbsaAutomation.src.main.TestSuites
 {
-    [TestClass]
-    public class UITestSuite 
+    [TestFixture]
+    [Parallelizable(ParallelScope.All)]
+    public class UITestSuite : AbsaBase
     {
         public TestContext TestContext { get; set; }
         public ProtractorApplication protractorApplication { get; set; }
 
-        [TestMethod]
-        public void CSVTest()
+        [AbsaTest, Test]
+        public void CSVTest(AbsaBase test)
         {
-            var currentTest = Base.Report.CreateTest(TestContext.TestName);
-            IWebDriver driver =  SeleniumController.CreateDriver("http://www.way2automation.com/angularjs-protractor/webtables/");
-            protractorApplication = new ProtractorApplication(driver, currentTest);
-
+            IWebDriver driver =  test.Selenium.CreateDriver("http://www.way2automation.com/angularjs-protractor/webtables/");
+            protractorApplication = new ProtractorApplication(driver);
             protractorApplication.userPage.CSVTest("UserCSV.csv");
-
-            SeleniumController.DriverClose(driver);
         }
 
-        [TestMethod]
-        public void JSONTest()
+        [AbsaTest, Test]
+        public void JSONTest(AbsaBase test)
         {
-            var currentTest = Base.Report.CreateTest(TestContext.TestName);
-            IWebDriver driver = SeleniumController.CreateDriver("http://www.way2automation.com/angularjs-protractor/webtables/");
-            protractorApplication = new ProtractorApplication(driver, currentTest);
-
+            IWebDriver driver = test.Selenium.CreateDriver("http://www.way2automation.com/angularjs-protractor/webtables/");
+            protractorApplication = new ProtractorApplication(driver);
             protractorApplication.userPage.JSONTest("UserData.json");
-            
-            SeleniumController.DriverClose(driver);
         }
     }
 }

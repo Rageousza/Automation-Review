@@ -2,7 +2,6 @@
 using System.Text;
 using System.Threading;
 using AbsaAutomation.src.main.Core;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
@@ -24,33 +23,10 @@ namespace AbsaAutomation.src.main.Tools
             _driver = driver;
         }
 
-        public static IWebDriver CreateDriver(string URL)
-        {
-            new DriverManager().SetUpDriver(new ChromeConfig());
-            var driver = new ChromeDriver();
-            driver.Navigate().GoToUrl(URL);
-            driver.Manage().Window.Maximize();
-            return driver;
-        }
-
         public void Navigate(string url)
         {
             _driver.Url = url;
         }
-
-        public IWebDriver GetDriver => _driver;
-
-        public static bool DriverClose(IWebDriver driver)
-        {
-            if (driver != null)
-            {
-                driver.Close();
-                driver.Quit();
-            }
-
-            return true;
-        }
-
 
         public bool WaitForElement(By selector, int sec = 5)
         {

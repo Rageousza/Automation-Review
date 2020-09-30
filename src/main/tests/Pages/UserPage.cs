@@ -8,7 +8,6 @@ using AbsaAutomation.src.Models;
 using AbsaAutomation.src.tests;
 using AngleSharp;
 using AventStack.ExtentReports;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 
 //Next Steps
@@ -21,9 +20,9 @@ namespace AbsaAutomation.src.tests
 {
     public class UserPage : SeleniumController
     {
-        public UserPage(IWebDriver driver, ExtentTest CurrentTest) : base(driver)
+        public UserPage(IWebDriver driver) : base(driver)
         {
-            _curTest = CurrentTest;            
+           // _curTest = CurrentTest;            
         }
 
         private By FirstName() { return By.XPath("//span[contains(text(), 'First Name')]"); }

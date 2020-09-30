@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using AbsaAutomation.src.main.Core;
+using AbsaAutomation.src.main.Tools;
 using AbsaAutomation.src.Models;
 using AventStack.ExtentReports;
 using AventStack.ExtentReports.MarkupUtils;
@@ -46,8 +47,8 @@ namespace AbsaAutomation.src.main.Controller
             IRestResponse response = client.Execute(request);
             var TimeFinished = DateTime.Now;
 
-            Base.Report.StepPassed("Status Description: " + response.StatusCode, CurrentTest);
-            Base.Report.StepInfoAPI(response.Content, CodeLanguage.Xml, CurrentTest);
+            Reporting.StepPassed("Status Description: " + response.StatusCode, CurrentTest);
+            Reporting.StepInfoAPI(response.Content, CodeLanguage.Xml, CurrentTest);
 
             //Serializtion
             APIModel Model = new APIModel()

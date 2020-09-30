@@ -10,9 +10,9 @@ namespace AbsaAutomation.src.main.Pages
     public class ProtractorApplication
     {
         public UserPage userPage { get; set; }
-        public ProtractorApplication(IWebDriver driver, ExtentTest Test)
+        public ProtractorApplication(IWebDriver driver)
         {
-            userPage = new UserPage(driver, Test);
+            userPage = new UserPage(driver);
         }
 
     }

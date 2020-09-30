@@ -6,53 +6,55 @@ using AventStack.ExtentReports.MarkupUtils;
 using OpenQA.Selenium;
 using System.Text;
 using System.IO;
+using NUnit.Framework;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace AbsaAutomation.src.main.Tools
 {
     public class Reporting
     {
-        public Reporting()
-        {
-            Setup();
-        }
-
         private static int ScreenshotCounter;
 
-        private AventStack.ExtentReports.ExtentReports _report;
+        private static AventStack.ExtentReports.ExtentReports _report;
+        private static List<ExtentTest> extentTest { get; set; } = new List<ExtentTest>();
+        public static string ReportName { get; set; }
+        public static string ReportDescription { get; set; }
+        public static string TestName { get; set; }
+        public static string _reportDir;
+        public static string ReportDirectory { get => _reportDir; set => _reportDir = value; }
+        public static DateTime starttime { get; set; }
+        public static DateTime endTime { get; set; }
 
-        public string ReportName { get; set; }
-        
-        public string ReportDescription { get; set; }
-        public string TestName { get; set; }
-        public string _reportDir;
-        public string ReportDirectory { get => _reportDir; set => _reportDir = value; }
-        public DateTime starttime { get; set; }
-        public DateTime endTime { get; set; }
-
-        private void Setup()
+        public static void Setup()
         {
-            ReportDirectory = AppDomain.CurrentDomain.BaseDirectory + @"..\..\..\TestResults\" + ReportName + @"\" + GetDateTime() + @"\";
-            System.IO.Directory.CreateDirectory(ReportDirectory);
-            var htmlReport = new ExtentHtmlReporter(ReportDirectory);
-            _report = new AventStack.ExtentReports.ExtentReports();
-            _report.AttachReporter(htmlReport);
+            if (_report == null)
+            {
+                ReportDirectory = AppDomain.CurrentDomain.BaseDirectory + @"..\..\..\TestResults\" + ReportName + @"\" + GetDateTime() + @"\";
+                System.IO.Directory.CreateDirectory(ReportDirectory);
+                var htmlReport = new ExtentHtmlReporter(ReportDirectory);
+                _report = new AventStack.ExtentReports.ExtentReports();
+                _report.AttachReporter(htmlReport);
+            }
 
-            _report.Flush();
+            if (extentTest == null) extentTest = new List<ExtentTest>();
         }
 
-        private string GetDateTime()
+        private static string GetDateTime()
         {
             return DateTime.Now.ToString("hh-mm-ss dd-MM-yyyy");
         }
 
-        public ExtentTest CreateTest(string TestName)
+        public static ExtentTest CreateTest()
         {
-            Base.Report.starttime = DateTime.Now;
-            return _report.CreateTest(TestName);
+            string TestName = TestContext.CurrentContext.Test.MethodName;
+            ExtentTest Test = _report.CreateTest(TestName);
+            extentTest.Add(Test);
+            return Test;
 
         }
 
-        public void Warning(string message, ExtentTest curTest)
+        public static void Warning(string message, ExtentTest curTest)
         {
             try
             {
@@ -66,11 +68,12 @@ namespace AbsaAutomation.src.main.Tools
             }
         }
 
-        public string StepPassed(string message, ExtentTest curTest)
+        public static string StepPassed(string message, ExtentTest curTest)
         {
+            ExtentTest test = GetTest(GetCurrentTestName());
             try
             {
-                curTest.Pass(message);
+                test.Pass(message);
                 _report.Flush();
                 return null;
             }
@@ -81,15 +84,18 @@ namespace AbsaAutomation.src.main.Tools
             }
         }
 
-        public void TestFailed(string message, IWebDriver driver, ExtentTest curTest, Screenshot screenshot = null)
+        public static void TestFailed(string message, Screenshot screenshot = null)
         {
             ScreenshotCounter++;
             string file = _reportDir + @"Screenshots\";
             Directory.CreateDirectory(file);
             screenshot.SaveAsFile(file + ScreenshotCounter + ".png");
+            ExtentTest test = GetTest(GetCurrentTestName());
+            message = message.Replace("<", "&lt");
+            message = message.Replace(">", "&lt");
             try
             {
-                curTest.Fail(message + "<br>", MediaEntityBuilder.CreateScreenCaptureFromPath(file).Build());
+                test.Fail(message + "<br>", MediaEntityBuilder.CreateScreenCaptureFromPath(file).Build());
                 _report.Flush();
                
             }
@@ -98,7 +104,7 @@ namespace AbsaAutomation.src.main.Tools
                 throw e;
             }
         }
-        public void TestFailed(string message, ExtentTest curTest)
+        public static void TestFailed(string message, ExtentTest curTest)
         {
             try
             {
@@ -111,23 +117,37 @@ namespace AbsaAutomation.src.main.Tools
             }
         }
 
-        public void StepPassedWithScreenshot(string message, ExtentTest curTest, Screenshot screenshot = null)
+        public static void StepPassedWithScreenshot(string message, Screenshot screenshot = null)
         {
             ScreenshotCounter++;
-            string file = _reportDir + @"Screenshots\";
-            Directory.CreateDirectory(file);
-            screenshot.SaveAsFile(file + ScreenshotCounter + ".png");
+            string screenshotfolder = @"Screenshots\";
+            string ScreenshotName = ScreenshotCounter + ".png";
+            //string file = _reportDir + @"Screenshots\";
+            Directory.CreateDirectory(_reportDir + screenshotfolder);
+            screenshot.SaveAsFile(_reportDir + screenshotfolder + ScreenshotName);
+            var t = ".\\" + screenshotfolder + ScreenshotName;
+
+            //ScreenshotCounter++;
+            //string file = _report + @"Screenshots\";
+            //string AbsolutePath = file;
+            //Directory.CreateDirectory(file);
+            //file = file + ScreenshotCounter + ".png";
+            //AbsolutePath += ScreenshotCounter + ".png";
+            //file = @"Screenshots\" + ScreenshotCounter + ".png";
+            //screenshot.SaveAsFile(AbsolutePath);
+            ExtentTest test = GetTest(GetCurrentTestName());
+
             try
             {
-                curTest.Pass(message + "<br>",
-                     MediaEntityBuilder.CreateScreenCaptureFromPath(file).Build());
+                test.Pass(message + "<br>",
+                     MediaEntityBuilder.CreateScreenCaptureFromPath(t).Build());
                 _report.Flush();
    
             }
             catch (Exception exc)
             {
                //Prints the message without the screenshot on the report
-                Warning("Failed to capture Screenshot", curTest);
+                Warning("Failed to capture Screenshot", test);
 
                 //Returns the error message
                 throw exc;
@@ -145,7 +165,7 @@ namespace AbsaAutomation.src.main.Tools
         //    return screenshotpath;
         //}
 
-        public void StepInfoAPI(string message, CodeLanguage codeLanguageFormat, ExtentTest curTest)
+        public static void StepInfoAPI(string message, CodeLanguage codeLanguageFormat, ExtentTest curTest)
         {
             try
             {
@@ -163,6 +183,30 @@ namespace AbsaAutomation.src.main.Tools
             }
         }
 
+        public static ExtentTest GetTest(string testname)
+        {
+            Setup();
+            if(extentTest.Count < 1)
+            {
+                return CreateTest();
+            }
+
+            var test = extentTest.Where(x => x.Model.Name == testname).FirstOrDefault();
+            return (test != null) ? test : CreateTest();
+        }
+
+        private static string GetCurrentTestName()
+        {
+            return TestContext.CurrentContext.Test.MethodName;
+        }
+
+        public static void TestPassed()
+        {
+            ExtentTest test = GetTest(GetCurrentTestName());
+            test.Pass("Test Comeplete");
+            _report.Flush();
+        }
+
         //public string STakeScreenshot(bool status)
         //{
         //    ScreenshotCounter++;
@@ -177,7 +221,6 @@ namespace AbsaAutomation.src.main.Tools
         //    ((ITakesScreenshot)_driver).GetScreenshot().SaveAsFile("" + builder + relativeBuilder);
         //    return "./" + relativeBuilder;
         //}
-
 
     }
 }

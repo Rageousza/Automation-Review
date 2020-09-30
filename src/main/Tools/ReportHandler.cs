@@ -14,17 +14,17 @@ namespace AbsaAutomation.src.main.Tools
 
         public void StepPassScreenshot(string message)
         {
-            Base.Report.StepPassedWithScreenshot(message, _curTest, TakeScreenshot());
+            Reporting.StepPassedWithScreenshot(message, TakeScreenshot());
         }
 
         public void TestFailed(string message)
         {
-            Base.Report.TestFailed(message, _driver, _curTest);
+            Reporting.TestFailed(message, TakeScreenshot());
         }
 
         public Screenshot TakeScreenshot()
         {
-            Screenshot ss = ((ITakesScreenshot)_driver).GetScreenshot();
+            Screenshot ss = ((ITakesScreenshot) _driver).GetScreenshot();
             return ss;
         }
     }
