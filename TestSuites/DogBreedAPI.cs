@@ -17,7 +17,6 @@ namespace AbsaAutomation.src.main.API_Test
     [TestFixture]
     public class DogBreedAPI : AbsaBase
     {
-
         public TestContext TestContext { get; set; }
         public static string BaseUrl = "https://dog.ceo/api/";
   

@@ -6,6 +6,7 @@ using AbsaAutomation.src.main.Core;
 using AbsaAutomation.src.tests;
 using AbsaAutomation.src.main.Pages;
 using NUnit.Framework;
+using Nunit_Multiple_Test;
 
 namespace AbsaAutomation.src.main.TestSuites
 {
